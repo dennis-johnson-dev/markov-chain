@@ -19,6 +19,7 @@ module.exports = {
         use: [{
           loader: "babel-loader",
           options: {
+            cacheDirectory: true,
             presets: ['es2015', 'react', 'react-hmre']
           }
         }],
