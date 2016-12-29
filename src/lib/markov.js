@@ -6,58 +6,62 @@ type generateOpts = {
 }
 
 export default class Markov {
-  wordMap: Map<string>;
+  wordMap: Map<string, Map<string, Object>>;
 
   constructor(inputText: string) {
     this.wordMap = this.buildIndex(inputText);
   }
 
-  generate = (opts: generateOpts) => {
-    let result = '';
-    const totalWords = this.wordMap.size;
+  getRandomIntegerInclusive(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+
+    return Math.floor(Math.random() * (max - min)) + min;
+  };
+
+  generate = () => {
+    let result: string = '';
+    const totalWords: number = this.wordMap.size;
     const keys = this.wordMap.keys();
-    const words = [];
+    const words: string[] = [];
 
     for (const word of keys) {
       words.push(word);
     }
 
-    const startingIndex = function getRandomIntInclusive(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min)) + min;
-    }(0, totalWords);
+    const startingIndex: number = this.getRandomIntegerInclusive(0, totalWords);
+    const startingWord: string = words[startingIndex];
 
-    const startingWord = words[startingIndex];
-
-    let currentWord = startingWord;
-    result = result + currentWord;
+    let currentWord: string = startingWord;
+    result = currentWord;
 
     while (result.length < 80) {
-      const currentWordConnections = this.wordMap.get(currentWord);
-      const connections = currentWordConnections.get('connections');
+      const currentWordMap = this.wordMap.get(currentWord);
+      if (!currentWordMap) {
+        break;
+      }
 
-      const total = Object.keys(connections).reduce((acc, val) => {
-        return acc + connections[val].count;
+      let connections = currentWordMap.get('connections') || {};
+      if (!connections) {
+        break;
+      }
+
+      let edges = Object.keys(connections) || [];
+      if (!edges.length) {
+        break;
+      }
+
+      const total = edges.reduce((acc, edge) => {
+        if (connections[edge]) {
+          return acc + connections[edge].count;
+        }
+
+        return acc;
       }, 0);
 
-      if (!total) {
-        break;
-      }
+      const weights = edges.map(edgesItem => connections[edgesItem].count / total);
 
-      const list = Object.keys(connections);
-
-      const weights = list.map((listItem) => {
-        return connections[listItem].count / total;
-      });
-
-      const random_item = this.getRandomItem(list, weights);
-
-      if (!random_item) {
-        break;
-      }
-
-      currentWord = random_item;
+      currentWord = this.getRandomConnection(edges, weights);
 
       result = `${result} ${currentWord}`;
     }
@@ -65,17 +69,30 @@ export default class Markov {
     return result;
   }
 
-  getRandomItem(list, weight) {
-    const random_num = Math.random();
-    let weight_sum = 0;
+  getRandomConnection(edges: string[], weights: number[]): string {
+    if (!edges) {
+      return '';
+    }
 
-    for (let i in list) {
-      weight_sum += weight[i];
+    if (!edges.length) {
+      return '';
+    }
+
+    const random_num = Math.random();
+    let weight_sum: number = 0;
+
+    let edge = '';
+
+    for (let edge = 0; edge < edges.length; edge++) {
+      weight_sum += weights[edge];
 
       if (random_num <= weight_sum) {
-        return list[i];
+        edge = edges[edge];
+        break;
       }
     }
+
+    return edge;
   };
 
   buildIndex(text: string) {
@@ -86,31 +103,33 @@ export default class Markov {
       const nextWord = words[idx + 1];
 
       if (wordMap.has(word)) {
-        const wordConnections = wordMap.get(word).get('connections');
+        const wordMaps = wordMap.get(word);
+        if (!wordMaps) {
+          return;
+        }
+        const wordConnections = wordMaps.get('connections');
+        if (!wordConnections) {
+          return;
+        }
 
         if (nextWord) {
-          let existingCount = wordConnections[nextWord] && wordConnections[nextWord].count;
-          if (existingCount) {
-            existingCount++;
-          }
-          wordConnections[nextWord] = {
-            count: existingCount || 1
-          };
+          let count = wordConnections[nextWord] && wordConnections[nextWord].count || 0;
 
-          wordMap.get(word).set('connections', wordConnections);
+          wordConnections[nextWord] = { count: count + 1 };
+
+          const wordMaps = wordMap.get(word);
+          if (wordMaps) {
+            wordMaps.set('connections', wordConnections);
+          }
         }
       } else {
-        let connection = {};
+        let wordConnections = {};
 
         if (nextWord) {
-          connection = {
-            [nextWord]: {
-              count: 1
-            }
-          }
+          wordConnections[nextWord] = { count: 1 };
         }
 
-        wordMap.set(word, new Map([["connections", connection]]));
+        wordMap.set(word, new Map([["connections", wordConnections]]));
       }
     });
 
