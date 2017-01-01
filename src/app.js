@@ -31,6 +31,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
+        <h3>Add text and click "generate"</h3>
         <textarea
           className="source-text"
           onChange={this.handleChange}
