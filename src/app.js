@@ -1,19 +1,9 @@
-// // @flow
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Markov from './lib/markov';
 
 import './styles/styles.scss';
-
-// type Props = {
-//
-// };
-//
-// type State = {
-//   value: string
-// };
 
 export default class App extends React.Component {
   state = {};
@@ -37,8 +27,10 @@ export default class App extends React.Component {
           onChange={this.handleChange}
           value={this.state.value}
         />
-        <button onClick={this.generate}>Generate</button>
-        <button onClick={this.clearResults}>Clear Results</button>
+        <div className="actions">
+          <button onClick={this.generate}>Generate</button>
+          <button onClick={this.clearResults}>Clear Results</button>
+        </div>
         <ul className="results">
             {
               this.state.results.map((result, i) => {
