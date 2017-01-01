@@ -83,11 +83,11 @@ export default class Markov {
 
     let edge = '';
 
-    for (let edge = 0; edge < edges.length; edge++) {
-      weight_sum += weights[edge];
+    for (let edgeIndex = 0; edgeIndex < edges.length; edgeIndex++) {
+      weight_sum += weights[edgeIndex];
 
       if (random_num <= weight_sum) {
-        edge = edges[edge];
+        edge = edges[edgeIndex];
         break;
       }
     }

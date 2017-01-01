@@ -21,9 +21,15 @@ module.exports = {
           loader: "babel-loader",
           options: {
             cacheDirectory: true,
+            plugins: ["transform-class-properties"],
             presets: ['es2015', 'react', 'react-hmre']
           }
         }],
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   },

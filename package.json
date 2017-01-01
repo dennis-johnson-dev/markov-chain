@@ -13,8 +13,13 @@
     "test:watch": "npm run test -- --watch"
   },
   "dependencies": {
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "css-loader": "^0.26.1",
+    "node-sass": "^4.1.1",
     "react": "^15.4.1",
-    "react-dom": "^15.4.1"
+    "react-dom": "^15.4.1",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1"
   },
   "devDependencies": {
     "babel-loader": "^6.2.10",
