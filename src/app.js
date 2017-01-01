@@ -38,10 +38,10 @@ export default class App extends React.Component {
         />
         <button onClick={this.generate}>Generate</button>
         <button onClick={this.clearResults}>Clear Results</button>
-        <ul>
+        <ul className="results">
             {
               this.state.results.map((result, i) => {
-                return <li key={i}>{result}</li>;
+                return <li className="results-item" key={i}>{result}</li>;
               })
             }
         </ul>
