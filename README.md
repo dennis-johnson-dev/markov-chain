@@ -12,4 +12,4 @@ yarn install
 npm run dev
 ```
 
-![markov](https://github.com/songawee/markov-chain/blob/master/img/markov.png)
+<img src="https://github.com/songawee/markov-chain/blob/master/img/markov.png" width="600" />
