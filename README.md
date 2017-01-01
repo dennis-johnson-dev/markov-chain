@@ -11,3 +11,5 @@ yarn install
 ```
 npm run dev
 ```
+
+![markov](/img/markov.png")
