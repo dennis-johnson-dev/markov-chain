@@ -1,5 +1,5 @@
 # markov-chain
-web app for generating an interactive markov chain from user input text
+web app for generating an interactive (Markov chain)[https://en.wikipedia.org/wiki/Markov_chain] from user input text
 
 # Installation
 ```
